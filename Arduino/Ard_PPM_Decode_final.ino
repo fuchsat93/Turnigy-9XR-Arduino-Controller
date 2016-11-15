@@ -1,5 +1,5 @@
-//OrangeRx R615X receiver has 6 channels, and one PPM channel which is a combination of all the PPM signals
-//into one output.  This program reads the PPM pin and displays the values of the channels.
+// OrangeRx R615X receiver has 6 channels, and one PPM channel which is a combination of all the PPM signals
+// into one output.  This program reads the PPM pin and displays the values of the channels.
 
 const int NumberOfChannels = 6;          
 const byte InputPin = 21;                
@@ -12,31 +12,33 @@ volatile byte Current_Channel = 0;
 volatile int Spike_Length[NumberOfChannels + 1];
 volatile int LastChannelFlag = false;
 
+// Any time a rising edge is seen on pin 2, Spike() is called
+// Set up with 8 DATA bits, No PARITY checking, 1 STOP bit
+// Set baud rate to 57600 baud
 void setup()
 {
   delay(100);
   attachInterrupt( 2, Spike, RISING); // Arduino interrupt pin 2 is digital pin 21
   Last_Spike = micros(); // Returns the number of microseconds since the Arduino began the program
   Serial.begin(57600, SERIAL_8N1);
-  
-  // Set up with 8 DATA bits, No PARITY checking, 1 STOP bit
-  // Set baud rate to 57600 baud
 }
 
-
+//  If all channels are read, get the time for last spike and then display all spikes onto serial port.
 void loop()
 {
+
+  
 
   if (LastChannelFlag == true)   
   {
     LastChannel();               
     Display();
   }
-}  //end loop()
+}
 
 
-
-
+//  Get the time on a rising edge.
+//  If the channel is the final channel, set flag for displaying information.
 void Spike()
 {
   Current_Time = micros();
@@ -53,7 +55,8 @@ void Spike()
 }
 
 
-
+//  Reset the LastChannelFlag, Current_Channel counter, and set the Last_Spike to the current time.
+//  This will then call the Display() function from the loop.
 void LastChannel()
 {
   while(digitalRead(InputPin) == HIGH);   
@@ -68,7 +71,8 @@ void LastChannel()
 
 
 
-// Prints values to Serial Monitor
+// Prints values to Serial Port
+// Delimit channel data with '\t' and end all channels with a '\n'
 void Display()
 {
   
