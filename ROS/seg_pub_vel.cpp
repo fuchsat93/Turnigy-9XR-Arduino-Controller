@@ -85,7 +85,8 @@ int main(int argc,char** argv)
 	ROS_INFO_STREAM("INITIALIZED!");
 	
 	// Need to edit this to be based on while(ros(ok))
-	while (c!='q')
+	ros::Rate rate(2);
+	while(ros::ok())
 	{
 
 		if (read(tty_fd,&inchar,1)>0){
@@ -111,19 +112,19 @@ int main(int argc,char** argv)
 							msg.linear.x = (ch4 - 50) / 50;
 							msg.angular.z = 0-(ch2 - 50) / 50;
 
-							//ROS_INFO_STREAM("Sending random velocity command:" << " linear=" << msg.linear.x << " angular=" << msg.angular.z);
+							// ROS_INFO_STREAM("Sending random velocity command:" << " linear=" << msg.linear.x << " angular=" << msg.angular.z);
+							// printf("CH1: %d; CH2: %d; CH3: %d; CH4: %d; CH5: %d; CH6: %d; \n", ch1, ch2, ch3, ch4, ch5, ch6);
 
 							// Publish the message
-							pub.publish(msg);
-
-							//printf("CH1: %d; CH2: %d; CH3: %d; CH4: %d; CH5: %d; CH6: %d; \n", ch1, ch2, ch3, ch4, ch5, ch6);
+							pub.publish(msg);	
 						}
 					}
 				}
 
 
 
-			read(STDIN_FILENO,&c,1);                      
+			read(STDIN_FILENO,&c,1);   
+			rate.sleep();                   
 	}
 
 	// Close the connection and write back the old stdio.
