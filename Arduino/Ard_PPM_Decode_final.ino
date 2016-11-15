@@ -1,6 +1,7 @@
 // OrangeRx R615X receiver has 6 channels, and one PPM channel which is a combination of all the PPM signals
 // into one output.  This program reads the PPM pin and displays the values of the channels.
 // Digital pin 2 is INT0
+// All power to Light comes from RMP220
 
 const int NumberOfChannels = 6;          
 const byte InputPin = INT0; 
