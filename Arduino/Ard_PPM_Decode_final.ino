@@ -2,7 +2,8 @@
 // into one output.  This program reads the PPM pin and displays the values of the channels.
 
 const int NumberOfChannels = 6;          
-const byte InputPin = 21;                
+const byte InputPin = 21;
+const byte TriggerPin = 13;
 const int FrameSpace = 8000;
 
 volatile long Current_Time;
@@ -18,6 +19,7 @@ volatile int LastChannelFlag = false;
 void setup()
 {
   delay(100);
+  pinMode(TriggerPin, OUTPUT);
   attachInterrupt( 2, Spike, RISING); // Arduino interrupt pin 2 is digital pin 21
   Last_Spike = micros(); // Returns the number of microseconds since the Arduino began the program
   Serial.begin(57600, SERIAL_8N1);
@@ -82,5 +84,17 @@ void Display()
     Serial.print("\t");
   }
   Serial.print("\n");
+  Trigger();
 }
 
+void Trigger()
+{
+  if ( map( Spike_Length[1], 1000, 2000, 0, 100 ) > 50 )
+  {
+    digitalWrite(TriggerPin, HIGH);
+  }
+  else
+  {
+    digitalWrite(TriggerPin, LOW);
+  }
+}
