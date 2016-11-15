@@ -84,7 +84,6 @@ int main(int argc,char** argv)
 	// Initializations are done, tell ROS no errors happened
 	ROS_INFO_STREAM("INITIALIZED!");
 	
-	// Need to edit this to be based on while(ros(ok))
 	while (c!='q')
 	{
 
