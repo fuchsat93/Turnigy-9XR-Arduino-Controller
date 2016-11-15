@@ -3,7 +3,8 @@
 
 const int NumberOfChannels = 6;          
 const byte InputPin = 21;
-const byte TriggerPin = 13;
+const byte TriggerPin = 8;
+const byte LightModePin = 9;
 const int FrameSpace = 8000;
 
 volatile long Current_Time;
@@ -20,6 +21,7 @@ void setup()
 {
   delay(100);
   pinMode(TriggerPin, OUTPUT);
+  pinMode(LightModePin, OUTPUT);
   attachInterrupt( 2, Spike, RISING); // Arduino interrupt pin 2 is digital pin 21
   Last_Spike = micros(); // Returns the number of microseconds since the Arduino began the program
   Serial.begin(57600, SERIAL_8N1);
@@ -85,16 +87,33 @@ void Display()
   }
   Serial.print("\n");
   Trigger();
+  LightMode();
 }
 
 void Trigger()
 {
   if ( map( Spike_Length[1], 1000, 2000, 0, 100 ) > 50 )
   {
+    // E-STOP is triggered
     digitalWrite(TriggerPin, HIGH);
   }
   else
   {
+    // E-STOP is disabled
     digitalWrite(TriggerPin, LOW);
+  }
+}
+
+void LightMode()
+{
+  if ( map( Spike_Length[3], 1000, 2000, 0, 100 ) > 50 )
+  {
+    // Autonomous Mode
+    digitalWrite(LightModePin, HIGH);
+  }
+  else
+  {
+    // Controlled Mode
+    digitalWrite(LightModePin, LOW);
   }
 }
