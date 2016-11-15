@@ -1,8 +1,9 @@
 // OrangeRx R615X receiver has 6 channels, and one PPM channel which is a combination of all the PPM signals
 // into one output.  This program reads the PPM pin and displays the values of the channels.
+// Digital pin 2 is INT0
 
 const int NumberOfChannels = 6;          
-const byte InputPin = 21;
+const byte InputPin = INT0; 
 const byte TriggerPin = 8;
 const byte LightModePin = 9;
 const int FrameSpace = 8000;
@@ -19,12 +20,12 @@ volatile int LastChannelFlag = false;
 // Set baud rate to 57600 baud
 void setup()
 {
-  delay(100);
-  pinMode(TriggerPin, OUTPUT);
-  pinMode(LightModePin, OUTPUT);
-  attachInterrupt( 2, Spike, RISING); // Arduino interrupt pin 2 is digital pin 21
-  Last_Spike = micros(); // Returns the number of microseconds since the Arduino began the program
-  Serial.begin(57600, SERIAL_8N1);
+  delay( 100 );
+  pinMode( TriggerPin , OUTPUT );
+  pinMode( LightModePin , OUTPUT );
+  attachInterrupt( InputPin , Spike , RISING ); // Arduino Pro MINI INT0 is interrupt pin 2 (digital pin 2)
+  Last_Spike = micros( ); // Returns the number of microseconds since the Arduino began the program
+  Serial.begin( 57600 , SERIAL_8N1 );
 }
 
 //  If all channels are read, get the time for last spike and then display all spikes onto serial port.
